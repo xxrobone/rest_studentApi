@@ -49,6 +49,40 @@ exports.insertStudent = async (req, res) => {
   }
 };
 
+// update student thru id
+exports.updateStudent = async (req, res) => {
+  let paramID = req.params.id;
+  let name = req.body.name;
+  let email = req.body.email;
+  let adress = req.body.adress;
+  let classes = req.body.classes;
+  let thumbnail = req.body.thumbnail;
+  try {
+    const updateStudent = await Student.updateOne(
+      { _id: paramID },
+      { name: name },
+      { email: email },
+      { adress: adress },
+      { classes: classes },
+      { thumbnail: thumbnail }
+    );
+    res.json(updateStudent);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+};
+
+// delete single student using the id
+exports.deleteStudent = async (req, res) => {
+  let paramID = req.params.id;
+  try {
+    const deleteStudent = await Student.deleteOne({ _id: paramID });
+    res.json(deleteStudent);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+};
+
 // function used to set some students in the db
 /* async function insertStudents() {
   try {
