@@ -6,6 +6,8 @@ const studentController = require('../controllers/studentController');
 // get
 router.get('/api/students/', studentController.listStudents);
 router.post('/api/students/', studentController.insertStudent);
+router.patch('/api/students/:id', studentController.updateStudent);
+router.delete('/api/students/:id', studentController.deleteStudent);
 
 // post
 
