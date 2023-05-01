@@ -6,15 +6,25 @@ const Student = require('../models/student');
  * GET all students
  */
 exports.listStudents = async (req, res) => {
-  let { limit = 10, page = 1, classes } = req.query;
+  let { limit = 10, page = 1, classes, q } = req.query;
   const queryLimit = parseInt(limit);
   const skip = (page - 1) * limit;
+
+  let query = {};
+  if (classes) query.classes = classes;
+  // a query set in student model, used here to be able to query anything using ?q=<text>
+  if (q) {
+    query = { $text: { $search: q } };
+  }
   try {
+    // created a search query to be able to search for everything in the data base
+    const students = await Student.find(query).limit(queryLimit).skip(skip);
+
     // to set dynamic request qurey you can specify it in the req.query and then apply in the find functions like below
-    const students = await Student.find({ classes: classes })
+    /*  const students = await Student.find({ classes: classes })
       .limit(queryLimit)
       .skip(skip);
-
+ */
     res.json(students);
   } catch (error) {
     res.status(400).json({ message: error });
