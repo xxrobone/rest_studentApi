@@ -11,11 +11,11 @@ exports.listStudents = async (req, res) => {
   const skip = (page - 1) * limit;
 
   let query = {};
-  if (classes) query.classes = classes;
   // a query set in student model, used here to be able to query anything using ?q=<text>
   if (q) {
     query = { $text: { $search: q } };
   }
+  if (classes) query.classes = classes;
   try {
     // created a search query to be able to search for everything in the data base
     const students = await Student.find(query).limit(queryLimit).skip(skip);
@@ -26,6 +26,24 @@ exports.listStudents = async (req, res) => {
       .skip(skip);
  */
     res.json(students);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+};
+
+// POST, add student to db
+exports.insertStudent = async (req, res) => {
+  const newStudent = new Student({
+    name: req.body.name,
+    email: req.body.email,
+    adress: req.body.adress,
+    classes: req.body.classes,
+    thumbnail: req.body.thumbnail,
+  });
+
+  try {
+    await newStudent.save();
+    res.json(newStudent);
   } catch (error) {
     res.status(400).json({ message: error });
   }
