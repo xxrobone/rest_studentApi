@@ -25,7 +25,7 @@ exports.listStudents = async (req, res) => {
       .limit(queryLimit)
       .skip(skip);
  */
-    res.json(students);
+    res.json({ page: page, limit: queryLimit, students });
   } catch (error) {
     res.status(400).json({ message: error });
   }
